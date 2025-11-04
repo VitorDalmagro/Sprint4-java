@@ -1,6 +1,6 @@
 package br.com.guiahc.beans;
 
-public class Cadastro {
+public class SimularCadastro {
 
     private int id;
 

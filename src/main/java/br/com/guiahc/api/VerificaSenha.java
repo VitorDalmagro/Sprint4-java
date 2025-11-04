@@ -1,5 +1,7 @@
 package br.com.guiahc.api;
 
+import java.util.Arrays;
+
 public class VerificaSenha {
 
     private String senha;
@@ -49,6 +51,13 @@ public class VerificaSenha {
         this.relatorio = relatorio;
     }
 
-
+    @Override
+    public String toString() {
+        return "\nRELATÓRIO SOBRE SEGURANÇA DA SENHA" +
+                "\nSenha:'" + senha +
+                "\nPontuação: " + pontuacao +
+                "\nNivel: " + nivel +
+                "\nRelatorio:\n " + Arrays.toString(relatorio);
+    }
 }
 

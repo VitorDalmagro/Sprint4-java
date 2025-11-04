@@ -10,6 +10,10 @@ import java.sql.SQLException;
 
 import java.util.Scanner;
 
+import br.com.guiahc.api.VerificaSenha;
+import br.com.guiahc.services.VerificaSenhaService;
+
+
 
 public class TesteSistema {
     static String texto(String j) {
@@ -39,30 +43,63 @@ public class TesteSistema {
             int escolha = scanner.nextInt();
 
             if (escolha == 1) {
-                JOptionPane.showMessageDialog(null, "Bem-vindo ao GUIA");
-
-                JOptionPane.showMessageDialog(null, "A seguir, teremos um formulário para se preparar e entender o processo de cadastro do Hospital das Clínicas.");
+                System.out.println("\n** Bem-vindo ao GUIA **");
+                System.out.println("A seguir, teremos um formulário para entender o processo de cadastro do Hospital das Clínicas.\n");
 
                 Paciente objPaciente = new Paciente();
 
-                        objPaciente.setNome(texto("Digite seu nome"));
-                        objPaciente.setIdade(inteiro("Digite sua idade"));
-                        objPaciente.setEmail(texto("Digite seu e-mail"));
-                        objPaciente.setCpf(texto("Digite seu RG"));
-                        objPaciente.setDtNascimento(texto("Digite seu CPF"));
-                        objPaciente.setTelefone(texto("Digite sua data de nascimento no formato DD/MM/AAAA"));
-                        objPaciente.setTelefone(texto("Digite seu número de telefone EX: (XX) XXXXX-XXXX"));
-                        objPaciente.setSexo(texto("Digite o sexo do paciente (M/F)"));
+                System.out.println("Digite seu nome: ");
+                objPaciente.setNome(scanner.nextLine());
 
-                        PlanoSaude objPlanoSaude = new PlanoSaude(
+                System.out.print("Digite seu e-mail: ");
+                objPaciente.setEmail(scanner.next());
+
+                System.out.print("Digite uma senha para cadastro: ");
+                String senha = scanner.next();
+
+
+                System.out.print("Digite seu CPF: ");
+                objPaciente.setCpf(scanner.next());
+
+                System.out.print("Digite sua data de nascimento (DD/MM/AAAA): ");
+                objPaciente.setDtNascimento(scanner.next());
+
+                System.out.print("Digite seu número de telefone (ex: (11) 99999-8888): ");
+                objPaciente.setTelefone(scanner.next());
+
+                System.out.print("Digite o sexo do paciente (M/F): ");
+                objPaciente.setSexo(scanner.next());
+
+                PlanoSaude objPlanoSaude = new PlanoSaude(
                         texto("Digite o nome do plano de saúde (Indivídual, Família, etc.)"),
                         real("Digite o preço mensal do plano"),
                         texto("Digite o tipo do plano (ex: básico, executivo, premium)"));
 
 
-                        objPaciente.setPlanoSaude(objPlanoSaude);
+                objPaciente.setPlanoSaude(objPlanoSaude);
 
-                System.out.println("\n\nSuas informações estão logo abaixo, lembre-se de anotar tudo para não esquecer de nada!!!\n" + objPaciente + "\n\nSe precisar de qualquer ajuda, no menu, escolha a opção ajuda que todas as informações de contatos estarão lá, ficaremos felizes e, te ajudar!!");
+                System.out.println("\n** RESUMO DO CADASTRO **");
+                System.out.println(objPaciente);
+
+
+                try {
+                    VerificaSenhaService service = new VerificaSenhaService();
+                    VerificaSenha resultado = service.getVerificarSenha(senha);
+
+                    System.out.println("\n** RELATÓRIO SOBRE SEGURANÇA DA SENHA **");
+                    System.out.println("Senha: " + resultado.getSenha());
+                    System.out.println("Pontuação: " + resultado.getPontuacao());
+                    System.out.println("Nível: " + resultado.getNivel());
+                    System.out.println("Relatório:");
+                    for (String item : resultado.getRelatorio()) {
+                        System.out.println(" - " + item);
+                    }
+
+
+                } catch (Exception e) {
+                    System.out.println("Erro ao verificar a senha: " + e.getMessage());
+                }
+                System.out.println("\nSe precisar de ajuda, volte ao menu principal e escolha a opção 'Ajuda'.");
 
 
             } else if (escolha == 2) {
