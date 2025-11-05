@@ -1,5 +1,7 @@
 package br.com.guiahc.beans;
 
+import br.com.guiahc.api.VerificaSenha;
+
 public class Usuario {
 
     private int idUsuario;
@@ -10,6 +12,8 @@ public class Usuario {
     private String genero;
     private String telefone;
     private String cpf;
+    private VerificaSenha verificaSenha;
+
 
     public Usuario() {
     }
@@ -87,6 +91,14 @@ public class Usuario {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public VerificaSenha getVerificaSenha() {
+        return verificaSenha;
+    }
+
+    public void setVerificaSenha(VerificaSenha verificaSenha) {
+        this.verificaSenha = verificaSenha;
     }
 
 }

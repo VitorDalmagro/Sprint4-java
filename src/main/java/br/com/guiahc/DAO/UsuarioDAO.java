@@ -1,5 +1,6 @@
 package br.com.guiahc.DAO;
 
+import br.com.guiahc.api.VerificaSenha;
 import br.com.guiahc.beans.Usuario;
 import br.com.guiahc.conexao.ConexaoFactory;
 
@@ -8,22 +9,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UsuarioDAO {
 
-    private  Connection cn;
+    private Connection cn;
 
     public UsuarioDAO() throws SQLException, ClassNotFoundException {
-        super();
         this.cn = new ConexaoFactory().conexao();
     }
 
     // INSERT
     public String inserir(Usuario usuario) throws SQLException {
-        PreparedStatement stmt = cn.prepareStatement(
-                "INSERT INTO T_FIAP_USUARIO (ID_USUARIO, EMAIL, SENHA, NOME_COMPLETO, DATA_NASCIMENTO, GENERO, TELEFONE, CPF) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        );
+        String sqlCodigo = "INSERT INTO T_FIAP_USUARIO (ID_USUARIO, EMAIL, SENHA, NOME_COMPLETO, DATA_NASCIMENTO, GENERO, TELEFONE, CPF, SENHA_PONTUACAO, SENHA_NIVEL, SENHA_RELATORIO) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement stmt = cn.prepareStatement(sqlCodigo);
 
         stmt.setInt(1, usuario.getIdUsuario());
         stmt.setString(2, usuario.getEmail());
@@ -33,6 +33,16 @@ public class UsuarioDAO {
         stmt.setString(6, usuario.getGenero());
         stmt.setString(7, usuario.getTelefone());
         stmt.setString(8, usuario.getCpf());
+
+        if (usuario.getVerificaSenha() != null) {
+            stmt.setInt(9, usuario.getVerificaSenha().getPontuacao());
+            stmt.setString(10, usuario.getVerificaSenha().getNivel());
+            stmt.setString(11, Arrays.toString(usuario.getVerificaSenha().getRelatorio()));
+        } else {
+            stmt.setInt(9, 0);
+            stmt.setString(10, null);
+            stmt.setString(11, null);
+        }
 
         stmt.execute();
         stmt.close();
@@ -56,7 +66,7 @@ public class UsuarioDAO {
     // UPDATE
     public String atualizar(Usuario usuario) throws SQLException {
         PreparedStatement stmt = cn.prepareStatement(
-                "UPDATE T_FIAP_USUARIO SET EMAIL=?, SENHA=?, NOME_COMPLETO=?, DATA_NASCIMENTO=?, GENERO=?, TELEFONE=?, CPF=? WHERE ID_USUARIO=?"
+                "UPDATE T_FIAP_USUARIO SET EMAIL=?, SENHA=?, NOME_COMPLETO=?, DATA_NASCIMENTO=?, GENERO=?, TELEFONE=?, CPF=?, SENHA_PONTUACAO=?, SENHA_NIVEL=?, SENHA_RELATORIO=? WHERE ID_USUARIO=??"
         );
 
         stmt.setString(1, usuario.getEmail());
@@ -67,6 +77,16 @@ public class UsuarioDAO {
         stmt.setString(6, usuario.getTelefone());
         stmt.setString(7, usuario.getCpf());
         stmt.setInt(8, usuario.getIdUsuario());
+
+        if (usuario.getVerificaSenha() != null) {
+            stmt.setInt(8, usuario.getVerificaSenha().getPontuacao());
+            stmt.setString(9, usuario.getVerificaSenha().getNivel());
+            stmt.setString(10, Arrays.toString(usuario.getVerificaSenha().getRelatorio()));
+        } else {
+            stmt.setInt(8, 0);
+            stmt.setString(9, null);
+            stmt.setString(10, null);
+        }
 
         stmt.executeUpdate();
         stmt.close();
@@ -92,6 +112,17 @@ public class UsuarioDAO {
             usuario.setGenero(rs.getString(6));
             usuario.setTelefone(rs.getString(7));
             usuario.setCpf(rs.getString(8));
+
+            VerificaSenha verificaSenha = new VerificaSenha();
+            verificaSenha.setPontuacao(rs.getInt(9));
+            verificaSenha.setNivel(rs.getString(10));
+
+            // Tirando os colchetes e dividindo por virgula
+            verificaSenha.setRelatorio(rs.getString(11).replace("[","").replace("]","").split(", "));
+
+
+            usuario.setVerificaSenha(verificaSenha);
+
             lista.add(usuario);
         }
 
