@@ -10,13 +10,17 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class VerificaSenhaService {
 
     public VerificaSenha getVerificarSenha(String senha) throws IOException, IOException {
         VerificaSenha verificaSenha = null;
 
-        String url = "https://verificador-senha-api.onrender.com/senha/" + senha;
+        // transforma caracteres especiais em formatos seguros para URL
+        String senhaEncoded = URLEncoder.encode(senha, StandardCharsets.UTF_8);
+        String url = "https://verificador-senha-api.onrender.com/senha/" + senhaEncoded;
 
         // Request
         HttpGet request = new HttpGet(url);
@@ -37,6 +41,9 @@ public class VerificaSenhaService {
             Gson gson = new Gson();
 
             verificaSenha = gson.fromJson(json, VerificaSenha.class);
+
+            // Setando a senha para retornar bonitinho ao inves da senha encoded :)
+            verificaSenha.setSenha(senha);
 
         }
 
