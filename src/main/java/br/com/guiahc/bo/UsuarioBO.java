@@ -14,40 +14,25 @@ public class UsuarioBO {
 
     public ArrayList<Usuario> selecionarUsuarioBo() throws ClassNotFoundException, SQLException {
         usuarioDAO = new UsuarioDAO();
-        verificaSenhaDAO = new VerificarSenhaDAO();
+
         ArrayList<Usuario> usuarios = (ArrayList<Usuario>) usuarioDAO.selecionar();
-
-        for (Usuario u : usuarios) {
-            VerificaSenha vs = verificaSenhaDAO.buscarPorUsuario(u.getIdUsuario());
-            if (vs != null) {
-                u.setSenhaPontuacao(vs.getPontuacao());
-                u.setSenhaNivel(vs.getNivel());
-                u.setSenhaRelatorio(vs.getRelatorio());
-            }
-        }
-
         return usuarios;
     }
 
     public void inserirUsuarioBo(Usuario usuario, VerificaSenha verificaSenha) throws ClassNotFoundException, SQLException {
         usuarioDAO = new UsuarioDAO();
         usuarioDAO.inserir(usuario);
-
-        verificaSenhaDAO = new VerificarSenhaDAO();
-        verificaSenhaDAO.inserir(usuario.getIdUsuario(), verificaSenha);
     }
 
-    public void atualizarUsuarioBo(Usuario usuario, VerificaSenha verificaSenha) throws ClassNotFoundException, SQLException {
+    public void atualizarUsuarioBo(Usuario usuario) throws ClassNotFoundException, SQLException {
         usuarioDAO = new UsuarioDAO();
         usuarioDAO.atualizar(usuario);
-
-        verificaSenhaDAO = new VerificarSenhaDAO();
-        verificaSenhaDAO.inserir(usuario.getIdUsuario(), verificaSenha); // salva novo relatório
     }
+
 
     public void deletarUsuarioBo(int idUsuario) throws ClassNotFoundException, SQLException {
         usuarioDAO = new UsuarioDAO();
         usuarioDAO.deletar(idUsuario);
-        // opcional: deletar relatórios da senha
     }
+
 }

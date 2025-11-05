@@ -66,7 +66,7 @@ public class UsuarioDAO {
     // UPDATE
     public String atualizar(Usuario usuario) throws SQLException {
         PreparedStatement stmt = cn.prepareStatement(
-                "UPDATE T_FIAP_USUARIO SET EMAIL=?, SENHA=?, NOME_COMPLETO=?, DATA_NASCIMENTO=?, GENERO=?, TELEFONE=?, CPF=?, SENHA_PONTUACAO=?, SENHA_NIVEL=?, SENHA_RELATORIO=? WHERE ID_USUARIO=??"
+                "UPDATE T_FIAP_USUARIO SET EMAIL=?, SENHA=?, NOME_COMPLETO=?, DATA_NASCIMENTO=?, GENERO=?, TELEFONE=?, CPF=?, SENHA_PONTUACAO=?, SENHA_NIVEL=?, SENHA_RELATORIO=? WHERE ID_USUARIO=?"
         );
 
         stmt.setString(1, usuario.getEmail());
@@ -76,8 +76,8 @@ public class UsuarioDAO {
         stmt.setString(5, usuario.getGenero());
         stmt.setString(6, usuario.getTelefone());
         stmt.setString(7, usuario.getCpf());
-        stmt.setInt(8, usuario.getIdUsuario());
 
+        // Verificação básica '-'
         if (usuario.getVerificaSenha() != null) {
             stmt.setInt(8, usuario.getVerificaSenha().getPontuacao());
             stmt.setString(9, usuario.getVerificaSenha().getNivel());
@@ -88,7 +88,8 @@ public class UsuarioDAO {
             stmt.setString(10, null);
         }
 
-        stmt.executeUpdate();
+        stmt.setInt(11, usuario.getIdUsuario());
+        stmt.execute();
         stmt.close();
 
         return "Usuário atualizado com sucesso!";
@@ -117,8 +118,12 @@ public class UsuarioDAO {
             verificaSenha.setPontuacao(rs.getInt(9));
             verificaSenha.setNivel(rs.getString(10));
 
-            // Tirando os colchetes e dividindo por virgula
-            verificaSenha.setRelatorio(rs.getString(11).replace("[","").replace("]","").split(", "));
+            String relatorioStr = rs.getString(11); // pode ser null
+            if (relatorioStr != null) {
+                verificaSenha.setRelatorio(relatorioStr.replace("[","").replace("]","").split(", "));
+            } else {
+                verificaSenha.setRelatorio(new String[0]); // ou null, dependendo de como você quer tratar
+            }
 
 
             usuario.setVerificaSenha(verificaSenha);
