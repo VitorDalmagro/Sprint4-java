@@ -181,7 +181,7 @@ public class UsuarioDAO {
         return listaUsuario;
     }
 
-
+    
     // Fecha a conexão + tratamento
     public void fecharConexao() {
         if (cn != null) {

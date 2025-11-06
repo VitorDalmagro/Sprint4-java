@@ -19,13 +19,13 @@ public class UsuarioResource {
 
     public UsuarioResource() throws SQLException, ClassNotFoundException {}
 
-    // Selecionar todos
+
     @GET
     public ArrayList<Usuario> selecionarRs() throws ClassNotFoundException, SQLException {
         return (ArrayList<Usuario>) usuarioBO.selecionarUsuarioBo();
     }
 
-    // Inserir
+
     @POST
     public Response inserirRs(Usuario usuario, @Context UriInfo uriInfo) throws ClassNotFoundException, SQLException {
         try {
@@ -52,14 +52,14 @@ public class UsuarioResource {
         }
     }
 
-    // Atualizar
+
     @PUT
     public Response atualizarRs(Usuario usuario) throws ClassNotFoundException, SQLException {
         usuarioBO.atualizarUsuarioBo(usuario);
         return Response.ok().build();
     }
 
-    // Deletar
+
     @DELETE
     @Path("/{idUsuario}")
     public Response deletarRs(@PathParam("idUsuario") int idUsuario) throws ClassNotFoundException, SQLException {

@@ -52,29 +52,33 @@ public class TesteSistema {
                 objPaciente.setNome(scanner.nextLine());
 
                 System.out.print("Digite seu e-mail: ");
-                objPaciente.setEmail(scanner.next());
+                objPaciente.setEmail(scanner.nextLine());
 
                 System.out.print("Digite uma senha para cadastro: ");
-                String senha = scanner.next();
-
+                String senha = scanner.nextLine();
 
                 System.out.print("Digite seu CPF: ");
-                objPaciente.setCpf(scanner.next());
+                objPaciente.setCpf(scanner.nextLine());
 
                 System.out.print("Digite sua data de nascimento (DD/MM/AAAA): ");
-                objPaciente.setDtNascimento(scanner.next());
+                objPaciente.setDtNascimento(scanner.nextLine());
 
                 System.out.print("Digite seu número de telefone (ex: (11) 99999-8888): ");
-                objPaciente.setTelefone(scanner.next());
+                objPaciente.setTelefone(scanner.nextLine());
 
                 System.out.print("Digite o sexo do paciente (M/F): ");
-                objPaciente.setSexo(scanner.next());
+                objPaciente.setSexo(scanner.nextLine());
 
-                PlanoSaude objPlanoSaude = new PlanoSaude(
-                        texto("Digite o nome do plano de saúde (Indivídual, Família, etc.)"),
-                        real("Digite o preço mensal do plano"),
-                        texto("Digite o tipo do plano (ex: básico, executivo, premium)"));
+                // Definindo o Plano de Saúde
+                PlanoSaude objPlanoSaude = new PlanoSaude();
+                System.out.print("Digite o tipo do plano (básico, executivo, premium): ");
+                objPlanoSaude.setTipoDePlano(scanner.nextLine());
 
+                System.out.print("Digite o nome do plano de saúde (Individual, Família, etc.): ");
+                objPlanoSaude.setNomeDoPlano(scanner.nextLine());
+
+                System.out.print("Digite o preço mensal do plano: ");
+                objPlanoSaude.setPrecoMensal(scanner.nextDouble());
 
                 objPaciente.setPlanoSaude(objPlanoSaude);
 
@@ -94,7 +98,6 @@ public class TesteSistema {
                     for (String item : resultado.getRelatorio()) {
                         System.out.println(" - " + item);
                     }
-
 
                 } catch (Exception e) {
                     System.out.println("Erro ao verificar a senha: " + e.getMessage());

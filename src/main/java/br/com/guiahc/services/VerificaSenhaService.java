@@ -37,7 +37,6 @@ public class VerificaSenhaService {
             if (entity != null) {
 
                 String json = EntityUtils.toString(entity);
-                System.out.println("JSON retornado da API: " + json);
                 Gson gson = new Gson();
 
                 verificaSenha = gson.fromJson(json, VerificaSenha.class);
