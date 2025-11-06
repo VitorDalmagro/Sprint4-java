@@ -118,11 +118,11 @@ public class UsuarioDAO {
             verificaSenha.setPontuacao(rs.getInt(9));
             verificaSenha.setNivel(rs.getString(10));
 
-            String relatorioStr = rs.getString(11); // pode ser null
+            String relatorioStr = rs.getString(11);
             if (relatorioStr != null) {
                 verificaSenha.setRelatorio(relatorioStr.replace("[","").replace("]","").split(", "));
             } else {
-                verificaSenha.setRelatorio(new String[0]); // ou null, dependendo de como você quer tratar
+                verificaSenha.setRelatorio(new String[0]);
             }
 
 
@@ -130,6 +130,9 @@ public class UsuarioDAO {
 
             lista.add(usuario);
         }
+
+        stmt.close();
+
 
         return lista;
     }
