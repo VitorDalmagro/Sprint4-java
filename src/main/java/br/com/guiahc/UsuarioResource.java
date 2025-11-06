@@ -15,7 +15,7 @@ import java.util.ArrayList;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UsuarioResource {
-    private final UsuarioBO usuarioBO = new UsuarioBO();
+    private UsuarioBO usuarioBO = new UsuarioBO();
 
     public UsuarioResource() throws SQLException, ClassNotFoundException {}
 
@@ -29,23 +29,23 @@ public class UsuarioResource {
     @POST
     public Response inserirRs(Usuario usuario, @Context UriInfo uriInfo) throws ClassNotFoundException, SQLException {
         try {
-            // 1️⃣ Verificar a senha usando a API
+
             VerificaSenhaService service = new VerificaSenhaService();
             VerificaSenha verificaSenha = service.getVerificarSenha(usuario.getSenha());
 
-            // 2️⃣ Atribuir ao usuário
+
             usuario.setVerificaSenha(verificaSenha);
 
-            // 3️⃣ Inserir no banco
+
             usuarioBO.inserirUsuarioBo(usuario, verificaSenha);
 
-            // 4️⃣ Construir URI do recurso criado
+
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();
             builder.path(Integer.toString(usuario.getIdUsuario()));
             return Response.created(builder.build()).build();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); //importante para saber de onde vem o erro
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Erro ao inserir usuário e verificar senha: " + e.getMessage())
                     .build();

@@ -26,7 +26,7 @@ public class VerificaSenhaService {
         HttpGet request = new HttpGet(url);
 
         // Client
-        CloseableHttpClient httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        try(CloseableHttpClient httpClient = HttpClientBuilder.create().disableRedirectHandling().build()){
 
         // Response
         CloseableHttpResponse response = httpClient.execute(request);
@@ -34,17 +34,23 @@ public class VerificaSenhaService {
         // Entity
         HttpEntity entity = response.getEntity();
 
-        if (entity != null) {
+            if (entity != null) {
 
-            String json = EntityUtils.toString(entity);
+                String json = EntityUtils.toString(entity);
+                System.out.println("JSON retornado da API: " + json);
+                Gson gson = new Gson();
 
-            Gson gson = new Gson();
+                verificaSenha = gson.fromJson(json, VerificaSenha.class);
 
-            verificaSenha = gson.fromJson(json, VerificaSenha.class);
+                // Garantir que verificaSenha não seja nulo
+                if (verificaSenha == null) {
+                    verificaSenha = new VerificaSenha();
+                }
 
-            // Setando a senha para retornar bonitinho ao inves da senha encoded :)
-            verificaSenha.setSenha(senha);
-
+                // Setando a senha para retornar bonitinho ao inves da senha encoded :)
+                verificaSenha.setSenha(senha);
+            }
+            response.close();
         }
 
         return verificaSenha;
