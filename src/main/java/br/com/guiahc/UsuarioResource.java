@@ -21,13 +21,42 @@ public class UsuarioResource {
 
 
     @GET
-    public ArrayList<Usuario> selecionarRs() throws ClassNotFoundException, SQLException {
-        return (ArrayList<Usuario>) usuarioBO.selecionarUsuarioBo();
+    public Response selecionarRs() {
+        try {
+            return Response.ok(usuarioBO.selecionarUsuarioBo()).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao listar usuários: " + e.getMessage())
+                    .build();
+        }
     }
 
 
     @POST
-    public Response inserirRs(Usuario usuario, @Context UriInfo uriInfo) throws ClassNotFoundException, SQLException {
+    public Response inserirRs(Usuario usuario, @Context UriInfo uriInfo) {
+        try {
+            VerificaSenhaService service = new VerificaSenhaService();
+            VerificaSenha verificaSenha = service.getVerificarSenha(usuario.getSenha());
+
+            usuario.setVerificaSenha(verificaSenha);
+            usuarioBO.inserirUsuarioBo(usuario, verificaSenha);
+
+            return Response.status(Response.Status.CREATED)
+                    .entity("Usuário cadastrado com sucesso!")
+                    .build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao inserir usuário: " + e.getMessage())
+                    .build();
+        }
+    }
+
+
+
+    @PUT
+    public Response atualizarRs(Usuario usuario) throws ClassNotFoundException, SQLException {
         try {
 
             VerificaSenhaService service = new VerificaSenhaService();
@@ -37,33 +66,31 @@ public class UsuarioResource {
             usuario.setVerificaSenha(verificaSenha);
 
 
-            usuarioBO.inserirUsuarioBo(usuario, verificaSenha);
+            usuarioBO.atualizarUsuarioBo(usuario);
 
-
-            UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-            builder.path(Integer.toString(usuario.getIdUsuario()));
-            return Response.created(builder.build()).build();
-
+            return Response.ok("Usuário atualizado com sucesso!").build();
         } catch (Exception e) {
-            e.printStackTrace(); //importante para saber de onde vem o erro
+            e.printStackTrace();
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Erro ao inserir usuário e verificar senha: " + e.getMessage())
+                    .entity("Erro ao atualizar usuário: " + e.getMessage())
                     .build();
         }
     }
 
 
-    @PUT
-    public Response atualizarRs(Usuario usuario) throws ClassNotFoundException, SQLException {
-        usuarioBO.atualizarUsuarioBo(usuario);
-        return Response.ok().build();
-    }
-
-
     @DELETE
     @Path("/{idUsuario}")
-    public Response deletarRs(@PathParam("idUsuario") int idUsuario) throws ClassNotFoundException, SQLException {
-        usuarioBO.deletarUsuarioBo(idUsuario);
-        return Response.ok().build();
+    public Response deletarRs(@PathParam("idUsuario") int idUsuario) {
+        try {
+            usuarioBO.deletarUsuarioBo(idUsuario);
+            return Response.ok("Usuário deletado com sucesso!").build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Erro ao deletar usuário: " + e.getMessage())
+                    .build();
+        }
     }
+
 }
