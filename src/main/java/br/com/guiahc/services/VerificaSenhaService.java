@@ -39,7 +39,8 @@ public class VerificaSenhaService {
                 String json = EntityUtils.toString(entity);
                 Gson gson = new Gson();
 
-                verificaSenha = gson.fromJson(json, VerificaSenha.class);
+                String jsonLimpo = gson.fromJson(json, String.class);
+                verificaSenha = gson.fromJson(jsonLimpo, VerificaSenha.class);
 
                 // Garantir que verificaSenha não seja nulo
                 if (verificaSenha == null) {
