@@ -142,18 +142,18 @@ public class UsuarioDAO {
 
             while (rs.next()) {
                 Usuario usuario = new Usuario();
-                usuario.setIdUsuario(rs.getInt("ID_USUARIO"));
-                usuario.setEmail(rs.getString("EMAIL"));
-                usuario.setSenha(rs.getString("SENHA"));
-                usuario.setNomeCompleto(rs.getString("NOME_COMPLETO"));
-                usuario.setDataNascimento(rs.getString("DATA_NASCIMENTO"));
-                usuario.setGenero(rs.getString("GENERO"));
-                usuario.setTelefone(rs.getString("TELEFONE"));
-                usuario.setCpf(rs.getString("CPF"));
+                usuario.setIdUsuario(rs.getInt(1));
+                usuario.setEmail(rs.getString(2));
+                usuario.setSenha(rs.getString(3));
+                usuario.setNomeCompleto(rs.getString(4));
+                usuario.setDataNascimento(rs.getString(5));
+                usuario.setGenero(rs.getString(6));
+                usuario.setTelefone(rs.getString(7));
+                usuario.setCpf(rs.getString(8));
 
                 VerificaSenha verificaSenha = new VerificaSenha();
-                verificaSenha.setPontuacao(rs.getInt("SENHA_PONTUACAO"));
-                verificaSenha.setNivel(rs.getString("SENHA_NIVEL"));
+                verificaSenha.setPontuacao(rs.getInt(9));
+                verificaSenha.setNivel(rs.getString(10));
                 verificaSenha.setSenha(usuario.getSenha());
 
                 String relatorioStr = rs.getString("SENHA_RELATORIO");
