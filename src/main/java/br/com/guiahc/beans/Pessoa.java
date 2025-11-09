@@ -84,7 +84,6 @@ public abstract class Pessoa {
     public String toString() {
         return
                 "\nNome: " + nome +
-                        "\nIdade: " + idade +
                         "\nE-mail: " + email +
                         "\nCPF: " + cpf +
                         "\nData de nascimento: " + dtNascimento +
